@@ -1,0 +1,28 @@
+package br.com.matheus.gestao_vagas.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+
+@Configuration
+public class SwaggerConfig {
+    
+    @Bean //Sobrescrevendo uma implementração que já existe
+    public OpenAPI openAPI() {
+
+        return new OpenAPI()
+        .info(new Info().title("Gestão de Vagas").description("API responsável pela gestão de vagas").version("1"))
+        .schemaRequirement("jwt_auth", createSecurityScheme());
+
+        //Adicionando as duas linhas abaixo, o swagger adiciona a segurança em todas as rotas
+        // .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+        // .components(new Components().addSecuritySchemes("Bearer Authentication", createSecurityScheme()));
+    }
+
+    private SecurityScheme createSecurityScheme() {
+        return new SecurityScheme().name("jwt_auth").type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT");
+    }
+}
